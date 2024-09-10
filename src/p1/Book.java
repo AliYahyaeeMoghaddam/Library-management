@@ -17,9 +17,9 @@ public class Book {
 
     private String currentUser;
 
-    private static int book_id = 1;
+    private int book_id = 1;
 
-    private static Map <Integer , Book> books = new HashMap<>();
+    private Map <Integer , Book> books = new HashMap<>();
 
     public Book(Library instance , String name , String genre , int book_id){
         setInstance(instance);
@@ -28,7 +28,7 @@ public class Book {
         setBook_id(book_id);
     }
 
-    public static void Defult(Library instance){
+    public void Default(Library instance){
         Book book1 = new Book(instance,"Three Men in a Boat","Comedy",book_id);
         books.put(book_id,book1);
         instance.setBooks(book_id++,book1);
@@ -61,24 +61,24 @@ public class Book {
         instance.setBooks(book_id++,book10);
     }
 
-    public static void create(Library instance , String name , String genre){
+    public void create(Library instance , String name , String genre){
         Book create = new Book(instance , name , genre , book_id);
         books.put(book_id,create);
         instance.setBooks(book_id,create);
         book_id++;
     }
 
-    public static void delete(int book_id){
+    public void delete(int book_id){
         books.remove(book_id);
     }
 
-    public static void read(){
+    public void read(){
         for(Book b : books.values()){
             System.out.println(b);
         }
     }
 
-    public static void update(Library instance , int id , String name , String genre){
+    public void update(Library instance , int id , String name , String genre){
         Book update = books.get(id);
         if(update != null){
             update.setName(name);
@@ -90,7 +90,7 @@ public class Book {
             System.err.println("book not found!");
     }
 
-    public static void check(int i){
+    public void check(int i){
         if(books.containsKey(i)) {
             Book book = books.get(i);
             if (book.getCurrentUser() != null)
@@ -109,7 +109,7 @@ public class Book {
             System.out.println("not found!");
     }
 
-    public static void search(int bookId){
+    public void search(int bookId){
         if(books.containsKey(bookId)){
             Book book = books.get(bookId);
             System.out.println(book);
@@ -117,7 +117,7 @@ public class Book {
             System.out.println("not found!");
     }
 
-    public static void search(String genre){
+    public void search(String genre){
         for(Book book : books.values()){
             if(book.getGenre().equals(genre)) {
                 System.out.println(book);

@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class User {
 
-    private static Library instance;
+    private Library instance;
 
     private String firstName;
 
@@ -14,7 +14,7 @@ public class User {
 
     private int nationalCode;
 
-    private static int user_id = 1;
+    private int user_id = 1;
 
     private String rentedBooks;
 
@@ -24,9 +24,10 @@ public class User {
 
     private int count = 0;
 
-    private static Map<Integer , User> users = new HashMap<>();
+    private Map<Integer , User> users = new HashMap<>();
 
-    static Scanner in = new Scanner(System.in);
+    Scanner in = new Scanner(System.in);
+
     public User(Library instance , String firstName , String lastName , int nationalCode){
         this.instance = instance;
         this.firstName = firstName;
@@ -42,13 +43,11 @@ public class User {
             }
         }
     }
-    public static void selectBook() {
+    public void selectBook(int user_id) {
         Book b = null;
         b.read();
 
-        System.out.println("Please enter your user ID:");
-        int userId = in.nextInt();
-        User user = users.get(userId);
+        User user = users.get(user_id);
 
         if (user == null) {
             System.out.println("User not found!");
@@ -90,7 +89,7 @@ public class User {
             }
         }
     }
-    public static void create(Library instance, String firstName, String lastName, int nationalCode){
+    public void create(Library instance, String firstName, String lastName, int nationalCode){
         User user = new User(instance,firstName,lastName,nationalCode);
         users.put(user_id,user);
         instance.setUsers(user_id,user);
@@ -98,15 +97,16 @@ public class User {
         System.out.println("Do you want to login to your account?");
         user_id++;
     }
-    public static void login(int userId , String first , String last , int national){
+    public void login(int userId , String first , String last , int national){
         if(users.containsKey(userId)){
             User user = users.get(userId);
             if(user.getFirstName().equals(first) &&
                     user.getLastName().equals(last) &&
-                    user.getNationalCode() == national &&
-                    user.getUser_id() == userId){
+                    user.getNationalCode() == national //&&
+                    //user.getUser_id() == userId
+            ){
 
-                selectBook();
+                selectBook(userId);
                 System.out.println("correct!");
             }
             else
@@ -115,12 +115,12 @@ public class User {
         else
             System.out.println("The specification is incorrect!!");
     }
-    public static void read(){
+    public void read(){
         for (User us : users.values()) {
-            System.out.println(us.firstName + " " + us.lastName + "\tnational code : " + us.nationalCode + "\tuser id : " + us.user_id);
+            System.out.println("Name : " + us.firstName + " " + us.lastName + "\t\tnational code : " + us.nationalCode + "\tuser id : " + us.user_id);
         }
     }
-    public static void check(int i){
+    public void check(int i){
         if(users.containsKey(i)) {
             User user = users.get(i);
             System.out.println("Current book : ");
@@ -134,7 +134,7 @@ public class User {
         } else
             System.out.println("not found!");
     }
-    public static void update(Library instance , int id , String firstName , String lastName , int nationalCode){
+    public void update(Library instance , int id , String firstName , String lastName , int nationalCode){
         User user = users.get(id);
         user.setInstance(instance);
         if (user != null) {
@@ -146,7 +146,7 @@ public class User {
         } else
             System.out.println("user is null");
     }
-    public static void delete(int id){
+    public void delete(int id){
 
         User user = users.get(id);
         if (user != null) {
@@ -155,7 +155,7 @@ public class User {
             System.out.println("user not found");
 
     }
-    public static void search(int userId){
+    public void search(int userId){
         if(users.containsKey(userId)){
             User user = users.get(userId);
             System.out.println(user.getFirstName() + " " + user.getLastName());
@@ -163,7 +163,7 @@ public class User {
         else
             System.out.println("not found!");
     }
-    public static void search(String firstName , String lastName){
+    public void search(String firstName , String lastName){
         for (User user : users.values()){
             if(user.getFirstName().equals(firstName) && user.getLastName().equals(lastName)){
                 System.out.println(user);

@@ -39,10 +39,6 @@ public class Main {
                     System.out.println("Enter your national code : ");
                     int national = in.nextInt();
                     library.createUser(first,last,national);
-                    String log = in.next();
-                    if(log.equals("yes")){
-                        User.selectBook();
-                    }
                     break;
                 case 2: // login and open book list and select book
                     System.out.println("Enter your user id : ");
