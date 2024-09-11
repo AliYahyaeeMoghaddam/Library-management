@@ -49,7 +49,15 @@ public class Main {
                     String lName = in.next();
                     System.out.println("Enter your national code : ");
                     int NCode = in.nextInt();
-                    library.loginUser(id,fName,lName,NCode);
+                    boolean temp = library.loginUser(id,fName,lName,NCode);
+                    if (temp){
+                        library.readBook();
+                        System.out.println("Enter the ID of the book you want to rent (or enter -1 to stop):");
+                        int bookId = in.nextInt();
+                        library.selectBook(id,fName,lName,NCode,bookId);
+                    }
+                    else
+                        System.out.println("Login failed!");
                     break;
                 case 3: // read user
                     library.readUser();

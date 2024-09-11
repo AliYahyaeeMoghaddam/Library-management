@@ -26,8 +26,6 @@ public class User {
 
     private Map<Integer , User> users = new HashMap<>();
 
-    Scanner in = new Scanner(System.in);
-
     public User(Library instance , String firstName , String lastName , int nationalCode){
         this.instance = instance;
         this.firstName = firstName;
@@ -43,9 +41,7 @@ public class User {
             }
         }
     }
-    public void selectBook(int user_id) {
-        Book b = null;
-        b.read();
+    public void selectBook(int user_id , int bookId) {
 
         User user = users.get(user_id);
 
@@ -61,8 +57,7 @@ public class User {
 
         System.out.println("You can choose up to " + (3 - user.getCount()) + " books:");
         for (int i = 0; i < (3 - user.getCount()); i++) {
-            System.out.println("Enter the ID of the book you want to rent (or enter -1 to stop):");
-            int bookId = in.nextInt();
+            //System.out.println("Enter the ID of the book you want to rent (or enter -1 to stop):");
 
             if (bookId == -1) break;
 
@@ -97,7 +92,7 @@ public class User {
         System.out.println("Do you want to login to your account?");
         user_id++;
     }
-    public void login(int userId , String first , String last , int national){
+    public boolean login(int userId , String first , String last , int national){
         if(users.containsKey(userId)){
             User user = users.get(userId);
             if(user.getFirstName().equals(first) &&
@@ -106,14 +101,17 @@ public class User {
                     //user.getUser_id() == userId
             ){
 
-                selectBook(userId);
+                //selectBook(userId);
                 System.out.println("correct!");
+                return true;
             }
             else
                 System.out.println("The specification is incorrect!");
+            return false;
         }
         else
             System.out.println("The specification is incorrect!!");
+        return false;
     }
     public void read(){
         for (User us : users.values()) {

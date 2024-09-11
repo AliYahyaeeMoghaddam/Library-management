@@ -2,7 +2,6 @@ package p1;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 
 public class Library {
 
@@ -41,9 +40,12 @@ public class Library {
         //User.create(instance,first,last,national);
     }
     // login user
-    public void loginUser(int userId , String first , String last , int national) {
+    public boolean loginUser(int userId , String first , String last , int national) {
         User login = new User(instance,first,last,national);
-        login.login(userId,first,last,national);
+        boolean tOf = login.login(userId,first,last,national);
+        if (tOf)
+            return true;
+        else return false;
         //User.login(userId,first,last,national);
     }
     // search user
@@ -128,6 +130,11 @@ public class Library {
         //User.check(i);
     }
 
+    public void selectBook(int id, String fName, String lName, int NCode , int bookId) {
+        User select = new User(instance,fName,lName,NCode);
+        select.selectBook(id,bookId);
+    }
+
     public String readLibrary(){
         return getName();
     }
@@ -176,4 +183,5 @@ public class Library {
     public String toString(){
         return "";
     }
+
 }
