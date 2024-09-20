@@ -90,7 +90,7 @@ public class Main {
                     System.out.println("Enter the name of your book : ");
                     String name = in.next();
                     System.out.println("Enter the genre of your book : ");
-                    String genre = in.next();
+                    Genre genre = Genre.valueOf(in.next());
                     library.createBook(name,genre);
                     System.out.println("New book arrived!");
                     break;
@@ -113,7 +113,7 @@ public class Main {
                     System.out.println("Enter your name : ");
                     String bName = in.next();
                     System.out.println("Enter your genre : ");
-                    String gen = in.next();
+                    Genre gen = Genre.valueOf(in.next());
                     library.updateBook(bId,bName,gen);
                     System.out.println("Book updated!");
                     break;
@@ -147,7 +147,7 @@ public class Main {
                     }
                     else if(ch == 2){
                         System.out.println("Enter book genre (Capital first letter!) : ");
-                        library.searchBook(in.next());
+                        library.searchBook(Genre.valueOf(in.next()));
                     }
                     else
                         System.err.println("Error!");

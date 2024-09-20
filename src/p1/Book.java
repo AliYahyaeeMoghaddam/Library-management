@@ -1,7 +1,11 @@
 package p1;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import static p1.Genre.*;
 
 public class Book {
 
@@ -9,89 +13,89 @@ public class Book {
 
     private String name;
 
-    private String genre;
+    private Genre genre;
 
-    private String[] userHistory;
+    private static String[] userHistory;
 
-    private int index = 0;
+    private static int IndexOfUserHistory = 0;
 
     private String currentUser;
 
-    private int book_id = 1;
+    private static int book_id = 1;
 
-    private Map <Integer , Book> books = new HashMap<>();
+    private static List <Book> books = new ArrayList<>();
 
-    public Book(Library instance , String name , String genre , int book_id){
+    private Book(Library instance , String name , Genre genre , int book_id){
         setInstance(instance);
         setName(name);
         setGenre(genre);
         setBook_id(book_id);
     }
 
-    public void Default(Library instance){
-        Book book1 = new Book(instance,"Three Men in a Boat","Comedy",book_id);
-        books.put(book_id,book1);
+    public static void Default(Library instance){
+        Book book1 = new Book(instance,"Three Men in a Boat",COMEDY,book_id);
+        books.add(book_id,book1);
         instance.setBooks(book_id++,book1);
-        Book book2 = new Book(instance,"The Hitchhiker's Guide to the Galaxy","Comedy",book_id);
-        books.put(book_id,book2);
+        Book book2 = new Book(instance,"The Hitchhiker's Guide to the Galaxy",COMEDY,book_id);
+        books.add(book_id,book2);
         instance.setBooks(book_id++,book2);
-        Book book3 = new Book(instance,"Catch-22","Comedy",book_id);
-        books.put(book_id,book3);
+        Book book3 = new Book(instance,"Catch-22",COMEDY,book_id);
+        books.add(book_id,book3);
         instance.setBooks(book_id++,book3);
-        Book book4 = new Book(instance,"Death of a Salesman","Drama",book_id);
-        books.put(book_id,book4);
+        Book book4 = new Book(instance,"Death of a Salesman",DRAMA,book_id);
+        books.add(book_id,book4);
         instance.setBooks(book_id++,book4);
-        Book book5 = new Book(instance,"The Grapes of Wrath","Drama",book_id);
-        books.put(book_id,book5);
+        Book book5 = new Book(instance,"The Grapes of Wrath",DRAMA,book_id);
+        books.add(book_id,book5);
         instance.setBooks(book_id++,book5);
-        Book book6 = new Book(instance,"Atonement","Drama",book_id);
-        books.put(book_id,book6);
+        Book book6 = new Book(instance,"Atonement",DRAMA,book_id);
+        books.add(book_id,book6);
         instance.setBooks(book_id++,book6);
-        Book book7 = new Book(instance,"Don Quixote","scientific",book_id);
-        books.put(book_id,book7);
+        Book book7 = new Book(instance,"Don Quixote",SCIENTIFIC,book_id);
+        books.add(book_id,book7);
         instance.setBooks(book_id++,book7);
-        Book book8 = new Book(instance,"A Brief History of Time","scientific",book_id);
-        books.put(book_id,book8);
+        Book book8 = new Book(instance,"A Brief History of Time",SCIENTIFIC,book_id);
+        books.add(book_id,book8);
         instance.setBooks(book_id++,book8);
-        Book book9 = new Book(instance,"The Selfish Gene","Don Quixote",book_id);
-        books.put(book_id,book9);
+        Book book9 = new Book(instance,"The Selfish Gene",DON_QUIXOTE,book_id);
+        books.add(book_id,book9);
         instance.setBooks(book_id++,book9);
-        Book book10 = new Book(instance,"Charlotte's Web","Children's Literature ",book_id);
-        books.put(book_id,book10);
+        Book book10 = new Book(instance,"Charlotte's Web",CHILDREN,book_id);
+        books.add(book_id,book10);
         instance.setBooks(book_id++,book10);
     }
 
-    public void create(Library instance , String name , String genre){
+    public static void create(Library instance , String name , Genre genre){
         Book create = new Book(instance , name , genre , book_id);
-        books.put(book_id,create);
+        books.add(book_id,create);
         instance.setBooks(book_id,create);
         book_id++;
     }
 
-    public void delete(int book_id){
+    public static void delete(int book_id){
         books.remove(book_id);
     }
 
-    public void read(){
-        for(Book b : books.values()){
+    public static void read(){
+        for(Book b : books){
             System.out.println(b);
         }
     }
 
-    public void update(Library instance , int id , String name , String genre){
+    public static void update(Library instance , int id , String name , Genre genre){
         Book update = books.get(id);
         if(update != null){
             update.setName(name);
             update.setGenre(genre);
-            books.put(id,update);
+            books.add(id,update);
             instance.setBooks(id,update);
         }
         else
             System.err.println("book not found!");
     }
 
-    public void check(int i){
-        if(books.containsKey(i)) {
+    public static void check(int i){
+        if(books.contains(i)) {
             Book book = books.get(i);
             if (book.getCurrentUser() != null)
                 System.out.println("Current user : " + book.getCurrentUser());
@@ -109,16 +113,16 @@ public class Book {
             System.out.println("not found!");
     }
 
-    public void search(int bookId){
-        if(books.containsKey(bookId)){
+    public static void search(int bookId){
+        if(books.contains(bookId)){
             Book book = books.get(bookId);
             System.out.println(book);
         }else
             System.out.println("not found!");
     }
 
-    public void search(String genre){
-        for(Book book : books.values()){
+    public static void search(Genre genre){
+        for(Book book : books){
             if(book.getGenre().equals(genre)) {
                 System.out.println(book);
             } else
@@ -134,11 +138,11 @@ public class Book {
         this.name = name;
     }
 
-    public String getGenre() {
+    public Genre getGenre() {
         return genre;
     }
 
-    public void setGenre(String genre) {
+    public void setGenre(Genre genre) {
         this.genre = genre;
     }
 
@@ -168,16 +172,16 @@ public class Book {
         return userHistory;
     }
 
-    public void setUserHistory(String userHistory) {
-        this.userHistory[index] = userHistory;
-        index++;
+    public static void setUserHistory(String userHis) {
+        userHistory[IndexOfUserHistory] = userHis;
+        IndexOfUserHistory++;
     }
 
-    public Map<Integer, Book> getBooks() {
+    public static List <Book> getBooks() {
         return books;
     }
 
-    public void setBooks(Map<Integer, Book> books) {
+    public void setBooks(List <Book> books) {
         this.books = books;
     }
 

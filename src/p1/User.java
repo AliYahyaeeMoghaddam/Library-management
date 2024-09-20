@@ -1,12 +1,13 @@
 package p1;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 
 public class User {
 
-    private Library instance;
+    private static Library instance;
 
     private String firstName;
 
@@ -14,25 +15,25 @@ public class User {
 
     private int nationalCode;
 
-    private int user_id = 1;
+    private static int user_id = 1;
 
     private String rentedBooks;
 
-    private final String[] currentBook = new String[3]; // max 3  ->  array[3]
+    private static final String[] currentBook = new String[3]; // max 3  ->  array[3]
 
     private int index = 0;
 
-    private int count = 0;
+    private static int count = 0;
 
-    private Map<Integer , User> users = new HashMap<>();
+    private static List <User> users = new ArrayList<>();
 
-    public User(Library instance , String firstName , String lastName , int nationalCode){
+    private User(Library instance , String firstName , String lastName , int nationalCode){
         this.instance = instance;
         this.firstName = firstName;
         this.lastName = lastName;
         this.nationalCode = nationalCode;
     }
-    public void addBook(String bookName){
+    public static void addBook(String bookName){
         for(int i = 0 ; i < currentBook.length ; i++){
             if (currentBook[i] == null){
                 currentBook[i] = bookName;
@@ -41,7 +42,7 @@ public class User {
             }
         }
     }
-    public void selectBook(int user_id , int bookId) {
+    public static void selectBook(int user_id , int bookId) {
 
         User user = users.get(user_id);
 
@@ -61,39 +62,36 @@ public class User {
 
             if (bookId == -1) break;
 
-            Book book = new Book(instance,"","",0);
-            book = book.getBooks().get(bookId);
-
-            if (book == null) {
+            if (Book.getBooks().get(bookId) == null) {
                 System.out.println("Book not found! Please try again.");
                 i--;
                 continue;
             }
 
-            if (book.getCurrentUser() != null) {
+            if (Book.getBooks().get(bookId).getCurrentUser() != null) {
                 System.out.println("This book is already rented by someone else.");
                 i--;
             }
             else {
-                user.addBook(String.valueOf(book));
-                book.setCurrentUser(String.valueOf(user));
-                user.setCurrentBook(book.getName());
+                user.addBook(String.valueOf(Book.getBooks().get(bookId)));
+                Book.getBooks().get(bookId).setCurrentUser(String.valueOf(user));
+                user.setCurrentBook(Book.getBooks().get(bookId).getName());
                 //String his = user.getFirstName() + " " + user.getLastName();
                 //book.setUserHistory(his);
-                System.out.println("Book '" + book.getName() + "' rented successfully!");
+                System.out.println("Book '" + Book.getBooks().get(bookId).getName() + "' rented successfully!");
             }
         }
     }
-    public void create(Library instance, String firstName, String lastName, int nationalCode){
+    public static void create(Library instance, String firstName, String lastName, int nationalCode){
         User user = new User(instance,firstName,lastName,nationalCode);
-        users.put(user_id,user);
+        users.add(user_id,user);
         instance.setUsers(user_id,user);
         System.out.format("User created!\tYour user id : %d\n",user_id);
         System.out.println("Do you want to login to your account?");
         user_id++;
     }
-    public boolean login(int userId , String first , String last , int national){
-        if(users.containsKey(userId)){
+    public static boolean login(int userId , String first , String last , int national){
+        if(users.contains(userId)){
             User user = users.get(userId);
             if(user.getFirstName().equals(first) &&
                     user.getLastName().equals(last) &&
@@ -113,13 +111,13 @@ public class User {
             System.out.println("The specification is incorrect!!");
         return false;
     }
-    public void read(){
-        for (User us : users.values()) {
+    public static void read(){
+        for (User us : users) {
             System.out.println("Name : " + us.firstName + " " + us.lastName + "\t\tnational code : " + us.nationalCode + "\tuser id : " + us.user_id);
         }
     }
-    public void check(int i){
-        if(users.containsKey(i)) {
+    public static void check(int i){
+        if(users.contains(i)) {
             User user = users.get(i);
             System.out.println("Current book : ");
             if (user.getCurrentBook() != null) {
@@ -132,19 +130,19 @@ public class User {
         } else
             System.out.println("not found!");
     }
-    public void update(Library instance , int id , String firstName , String lastName , int nationalCode){
+    public static void update(Library instance , int id , String firstName , String lastName , int nationalCode){
         User user = users.get(id);
         user.setInstance(instance);
         if (user != null) {
             user.firstName = firstName;
             user.lastName = lastName;
             user.nationalCode = nationalCode;
-            users.put(id, user);
+            users.add(id, user);
             instance.setUsers(id, user);
         } else
             System.out.println("user is null");
     }
-    public void delete(int id){
+    public static void delete(int id){
 
         User user = users.get(id);
         if (user != null) {
@@ -153,16 +151,16 @@ public class User {
             System.out.println("user not found");
 
     }
-    public void search(int userId){
-        if(users.containsKey(userId)){
+    public static void search(int userId){
+        if(users.contains(userId)){
             User user = users.get(userId);
             System.out.println(user.getFirstName() + " " + user.getLastName());
         }
         else
             System.out.println("not found!");
     }
-    public void search(String firstName , String lastName){
-        for (User user : users.values()){
+    public static void search(String firstName , String lastName){
+        for (User user : users){
             if(user.getFirstName().equals(firstName) && user.getLastName().equals(lastName)){
                 System.out.println(user);
             }
@@ -224,12 +222,12 @@ public class User {
         return String.format("Name : %s %s\tNational code : %d\tUser id : %d",firstName,lastName,nationalCode,user_id);
     }
 
-    public int getCount() {
+    public static int getCount() {
         return count;
     }
 
-    public void setCount(int count) {
-        this.count = count;
+    public static void setCount(int coun) {
+        count = coun;
     }
 
     public Library getInstance() {
@@ -240,11 +238,11 @@ public class User {
         this.instance = instance;
     }
 
-    public Map<Integer, User> getUsers() {
+    public List <User> getUsers() {
         return users;
     }
 
-    public void setUsers(Map<Integer, User> users) {
+    public void setUsers(List <User> users) {
         this.users = users;
     }
 }
