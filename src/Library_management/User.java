@@ -1,9 +1,9 @@
-package p1;
+package Library_management;
+
+import exceptions.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class User {
 
@@ -33,7 +33,9 @@ public class User {
         this.lastName = lastName;
         this.nationalCode = nationalCode;
     }
-    public static void addBook(String bookName){
+    public static void addBook(String bookName) throws AccountException{
+        if(bookName == null)
+            throw new AccountException(new TheInputArgumentIsNotNullException());
         for(int i = 0 ; i < currentBook.length ; i++){
             if (currentBook[i] == null){
                 currentBook[i] = bookName;
@@ -42,8 +44,10 @@ public class User {
             }
         }
     }
-    public static void selectBook(int user_id , int bookId) {
+    public static void selectBook(int user_id , int bookId) throws AccountException{
 
+        if(user_id <= 0 || bookId <= 0)
+            throw new AccountException(new IdGreaterThanZeroException());
         User user = users.get(user_id);
 
         if (user == null) {
@@ -82,15 +86,41 @@ public class User {
             }
         }
     }
-    public static void create(Library instance, String firstName, String lastName, int nationalCode){
-        User user = new User(instance,firstName,lastName,nationalCode);
-        users.add(user_id,user);
-        instance.setUsers(user_id,user);
-        System.out.format("User created!\tYour user id : %d\n",user_id);
-        System.out.println("Do you want to login to your account?");
-        user_id++;
+    public static void create(Library instance, String firstName, String lastName, int nationalCode) throws AccountException{
+        if(firstName == null || lastName == null)
+            throw new AccountException(new TheInputArgumentIsNotNullException());
+        if(nationalCode <= 0)
+            throw new AccountException(new NationalCodeGreaterThanZeroException());
+        if (TheNumberOfDigits(nationalCode)) {
+                User user = new User(instance, firstName, lastName, nationalCode);
+                users.add(user_id, user);
+                instance.setUsers(user_id, user);
+                System.out.format("User created!\tYour user id : %d\n", user_id);
+                System.out.println("Do you want to login to your account?");
+                user_id++;
+        }
+        else
+            throw new AccountException(new TenDigitNationalCodeException());
     }
-    public static boolean login(int userId , String first , String last , int national){
+    public static boolean TheNumberOfDigits(int num){
+        String str = String.valueOf(num);
+        int count = 0;
+        for (char c : str.toCharArray()) {
+            count++;
+        }
+        if(count == 10)
+            return true;
+        else
+            return false;
+    }
+
+    public static boolean login(int userId , String first , String last , int national) throws AccountException{
+        if (first == null || last == null)
+            throw new AccountException(new TheInputArgumentIsNotNullException());
+        if (national <= 0)
+            throw new AccountException(new NationalCodeGreaterThanZeroException());
+        if (userId <= 0)
+            throw new AccountException(new IdGreaterThanZeroException());
         if(users.contains(userId)){
             User user = users.get(userId);
             if(user.getFirstName().equals(first) &&
@@ -98,7 +128,6 @@ public class User {
                     user.getNationalCode() == national //&&
                     //user.getUser_id() == userId
             ){
-
                 //selectBook(userId);
                 System.out.println("correct!");
                 return true;
@@ -111,12 +140,24 @@ public class User {
             System.out.println("The specification is incorrect!!");
         return false;
     }
-    public static void read(){
+    public static void load(){
         for (User us : users) {
-            System.out.println("Name : " + us.firstName + " " + us.lastName + "\t\tnational code : " + us.nationalCode + "\tuser id : " + us.user_id);
+            System.out.println("Name : " + us.firstName + " " + us.lastName);
         }
     }
-    public static void check(int i){
+    public static void load(String firstName , String lastName) throws AccountException{
+        if(firstName == null || lastName == null)
+            throw new AccountException(new TheInputArgumentIsNotNullException());
+        for (User user : users) {
+            if(user.firstName.equals(firstName) && user.lastName.equals(lastName)){
+                System.out.println("Name : " + user.firstName + " " + user.lastName + "\t\tnational code : " + user.nationalCode + "\tuser id : " + user.user_id);
+            }
+        }
+    }
+
+    public static void check(int i) throws AccountException{
+        if (i <= 0)
+            throw new AccountException(new IdGreaterThanZeroException());
         if(users.contains(i)) {
             User user = users.get(i);
             System.out.println("Current book : ");
@@ -130,7 +171,13 @@ public class User {
         } else
             System.out.println("not found!");
     }
-    public static void update(Library instance , int id , String firstName , String lastName , int nationalCode){
+    public static void update(Library instance , int id , String firstName , String lastName , int nationalCode) throws AccountException{
+        if(firstName == null || lastName == null)
+            throw new AccountException(new TheInputArgumentIsNotNullException());
+        if(nationalCode <= 0)
+            throw new AccountException(new NationalCodeGreaterThanZeroException());
+        if(id <= 0)
+            throw new AccountException(new IdGreaterThanZeroException());
         User user = users.get(id);
         user.setInstance(instance);
         if (user != null) {
@@ -142,6 +189,40 @@ public class User {
         } else
             System.out.println("user is null");
     }
+
+    public static void update(Library instance , int id , String firstName , String lastName) throws AccountException{
+        if(firstName == null || lastName == null)
+            throw new AccountException(new TheInputArgumentIsNotNullException());
+        if (id <= 0)
+            throw new AccountException(new IdGreaterThanZeroException());
+        User user = users.get(id);
+        user.setInstance(instance);
+        if (user != null) {
+            user.firstName = firstName;
+            user.lastName = lastName;
+            users.add(id, user);
+            instance.setUsers(id, user);
+        }
+        else
+            System.out.println("user is null");
+    }
+
+    public static void update(Library instance , int id , int nationalCode) throws AccountException {
+        if (id <= 0)
+            throw new AccountException(new IdGreaterThanZeroException());
+        if (nationalCode <= 0)
+            throw new AccountException(new NationalCodeGreaterThanZeroException());
+        User user = users.get(id);
+        user.setInstance(instance);
+        if (user != null) {
+            user.nationalCode = nationalCode;
+            users.add(id, user);
+            instance.setUsers(id, user);
+        }
+        else
+            System.out.println("user is null");
+    }
+
     public static void delete(int id){
 
         User user = users.get(id);
@@ -151,7 +232,9 @@ public class User {
             System.out.println("user not found");
 
     }
-    public static void search(int userId){
+    public static void search(int userId) throws AccountException{
+        if (userId <= 0)
+            throw new AccountException(new IdGreaterThanZeroException());
         if(users.contains(userId)){
             User user = users.get(userId);
             System.out.println(user.getFirstName() + " " + user.getLastName());
@@ -159,7 +242,9 @@ public class User {
         else
             System.out.println("not found!");
     }
-    public static void search(String firstName , String lastName){
+    public static void search(String firstName , String lastName) throws AccountException{
+        if(firstName == null || lastName == null)
+            throw new AccountException(new TheInputArgumentIsNotNullException());
         for (User user : users){
             if(user.getFirstName().equals(firstName) && user.getLastName().equals(lastName)){
                 System.out.println(user);

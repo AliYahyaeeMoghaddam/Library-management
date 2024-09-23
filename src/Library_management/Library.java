@@ -1,4 +1,7 @@
-package p1;
+package Library_management;
+
+import Enum.Genre;
+import exceptions.AccountException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,15 +31,15 @@ public class Library {
         }
         return instance;
     }
-    public void DefaultBook(){
-        Book.Default(instance);
+    public void AvailableBooks(){
+        Book.available(instance);
     }
     //create user
-    public void createUser(String first , String last , int national){
+    public void createUser(String first , String last , int national) throws AccountException {
         User.create(instance,first,last,national);
     }
     // login user
-    public boolean loginUser(int userId , String first , String last , int national) {
+    public boolean loginUser(int userId , String first , String last , int national) throws AccountException{
         //User login = new User(instance,first,last,national);
         boolean tOf = User.login(userId,first,last,national);
         if (tOf)
@@ -45,13 +48,13 @@ public class Library {
     }
 
     // search user
-    public void searchUser(int userId){
+    public void searchUser(int userId) throws AccountException {
 //        User search = new User(instance,null,null,userId);
 //        search.search(userId);
         User.search(userId);
     }
 
-    public void searchUser(String first , String last){
+    public void searchUser(String first , String last) throws AccountException{
         User.search(first,last);
     }
 
@@ -61,53 +64,77 @@ public class Library {
         users.remove(user_id);
     }
     // read user
-    public void readUser(){
-        User.read();
+    public void loadUser(){
+        User.load();
     }
+
+    public void loadUser(String first , String last) throws AccountException{
+        User.load(first,last);
+    }
+
     // update user
-    public void updateUser(int user_id , String first , String last , int national){
+    public void updateUser(int user_id , String first , String last , int national) throws AccountException{
         User.update(instance,user_id,first,last,national);
     }
+    public void updateUser(int user_id , String first , String last) throws AccountException{
+        User.update(instance,user_id,first,last);
+    }
+    public void updateUser(int user_id , int national) throws AccountException{
+        User.update(instance,user_id,national);
+    }
+
     // create book
-    public void createBook(String name,Genre genre){
+    public void createBook(String name, Genre genre) throws AccountException {
         Book.create(instance,name,genre);
         bookId++;
     }
 
     // search book
-    public void searchBook(int bookId){
+    public void searchBook(int bookId) throws AccountException {
         Book.search(bookId);
     }
 
-    public void searchBook(Genre genre){
+    public void searchBook(Genre genre) throws AccountException{
         Book.search(genre);
     }
 
     //delete book
-    public void deleteBook(int id){
+    public void deleteBook(int id) throws AccountException {
         Book.delete(id);
         books.remove(id);
     }
 
     //read book
-    public void readBook(){
-        Book.read();
+    public void loadBook(){
+        Book.load();
     }
+
+    public void loadBook(String name) throws AccountException{
+        Book.load(name);
+    }
+
 
     //update book
-    public void updateBook(int book_id , String name , Genre genre){
+    public void updateBook(int book_id , String name , Genre genre) throws AccountException{
         Book.update(instance,book_id,name,genre);
     }
+    public void updateBook(int book_id , String name) throws AccountException{
+        Book.update(instance,book_id,name);
+    }
+    public void updateBook(int book_id , Genre genre) throws AccountException{
+        Book.update(instance,book_id,genre);
+    }
 
-    public void checkBook(int i){
+
+    public void checkBook(int i) throws AccountException{
         Book.check(i);
     }
 
-    public void checkUser(int i){
+    public void checkUser(int i) throws AccountException {
         User.check(i);
     }
 
-    public void selectBook(int id, String fName, String lName, int NCode , int bookId) {
+    public void selectBook(int id , int bookId) throws AccountException {
 //        User select = new User(instance,fName,lName,NCode);
 //        select.selectBook(id,bookId);
         User.selectBook(id,bookId);

@@ -1,4 +1,4 @@
-package p1;
+package Enum;
 
 public enum Genre {
 

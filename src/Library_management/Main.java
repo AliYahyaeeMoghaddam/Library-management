@@ -1,16 +1,19 @@
-package p1;
+package Library_management;
+
+import Enum.Genre;
+import exceptions.AccountException;
 
 import java.util.Scanner;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws AccountException {
 
         Scanner in = new Scanner(System.in);
 
         System.out.println("Enter library name : ");
         Library library = Library.getInstance(in.next());
-        library.DefaultBook();
+        library.AvailableBooks();
 
         while (true) {
             System.out.println("Please select one of the following :");
@@ -51,16 +54,24 @@ public class Main {
                     int NCode = in.nextInt();
                     boolean temp = library.loginUser(id,fName,lName,NCode);
                     if (temp){
-                        library.readBook();
+                        library.loadBook();
                         System.out.println("Enter the ID of the book you want to rent (or enter -1 to stop):");
                         int bookId = in.nextInt();
-                        library.selectBook(id,fName,lName,NCode,bookId);
+                        library.selectBook(id,bookId);
                     }
                     else
                         System.out.println("Login failed!");
                     break;
-                case 3: // read user
-                    library.readUser();
+                case 3: // load user
+                    library.loadUser();
+                    System.out.println("If you want to see the full profile of a user, enter the number 1 : ");
+                    if(in.nextInt() == 1){
+                        System.out.println("Enter your first name : ");
+                        String f = in.next();
+                        System.out.println("Enter your last name : ");
+                        String l = in.next();
+                        library.loadUser(f,l);
+                    }
                     System.out.println("Want to check out a book?");
                     if (in.next().equals("yes")){
                         System.out.println("Enter User id : ");
@@ -77,13 +88,33 @@ public class Main {
                 case 5: // update user
                     System.out.println("Please enter the user id you want to update : ");
                     int idd = in.nextInt();
-                    System.out.println("Enter your first name : ");
-                    String firstUp = in.next();
-                    System.out.println("Enter your last name : ");
-                    String lastUp = in.next();
-                    System.out.println("Enter your national code : ");
-                    int nationalUp = in.nextInt();
-                    library.updateUser(idd,firstUp,lastUp,nationalUp);
+                    System.out.println("Choose one of the following to update :");
+                    System.out.println("1 : Full user change");
+                    System.out.println("2 : Change user name");
+                    System.out.println("3 : Changing the user's national code");
+                    int up = in.nextInt();
+                    if (up == 1) {
+                        System.out.println("Enter your first name : ");
+                        String firstUp = in.next();
+                        System.out.println("Enter your last name : ");
+                        String lastUp = in.next();
+                        System.out.println("Enter your national code : ");
+                        int nationalUp = in.nextInt();
+                        library.updateUser(idd, firstUp, lastUp, nationalUp);
+                    }
+                    else if (up == 2) {
+                        System.out.println("Enter first name : ");
+                        String firstUp = in.next();
+                        System.out.println("Enter your last name : ");
+                        String lastUp = in.next();
+                        library.updateUser(idd,firstUp,lastUp);
+                    }
+                    else if (up == 3) {
+                        System.out.println("Enter your national code : ");
+                        library.updateUser(idd,in.nextInt());
+                    }
+                    else
+                        System.out.println("Error");
                     System.out.println("User updated!");
                     break;
                 case 6 : // create book
@@ -94,8 +125,14 @@ public class Main {
                     library.createBook(name,genre);
                     System.out.println("New book arrived!");
                     break;
-                case 7 : // read book
-                    library.readBook();
+                case 7 : // load book
+                    library.loadBook();
+                    System.out.println("If you want to see the full profile of a book, enter the number 1 : ");
+                    if(in.nextInt() == 1){
+                        System.out.println("Enter your book name : ");
+                        String book = in.next();
+                        library.loadBook(book);
+                    }
                     System.out.println("Want to check out a book?");
                     if (in.next().equals("yes")){
                         System.out.println("Enter book id : ");
@@ -110,23 +147,40 @@ public class Main {
                 case 9 : // update book
                     System.out.println("Enter the desired book id : ");
                     int bId = in.nextInt();
-                    System.out.println("Enter your name : ");
-                    String bName = in.next();
-                    System.out.println("Enter your genre : ");
-                    Genre gen = Genre.valueOf(in.next());
-                    library.updateBook(bId,bName,gen);
+                    System.out.println("Choose one of the following : ");
+                    System.out.println("1 : Complete change of the book");
+                    System.out.println("2 : Change the name of the book");
+                    System.out.println("3 : Changing the genre of the book");
+                    int vo = in.nextInt();
+                    if (vo == 1) {
+                        System.out.println("Enter your name : ");
+                        String bName = in.next();
+                        System.out.println("Enter your genre : ");
+                        Genre gen = Genre.valueOf(in.next());
+                        library.updateBook(bId, bName, gen);
+                    }
+                    else if (vo == 2) {
+                        System.out.println("Enter your name : ");
+                        library.updateBook(bId, in.next());
+                    }
+                    else if (vo == 3) {
+                        System.out.println("Enter your genre : ");
+                        library.updateBook(bId, in.next());
+                    }
+                    else
+                        System.out.println("Error!");
                     System.out.println("Book updated!");
                     break;
                 case 10 : // search user
                     System.out.println("How do you want to search?");
                     System.out.println("1 : User id");
                     System.out.println("2 : User name");
-                    int ch = in.nextInt();
-                    if (ch == 1){
+                    int v = in.nextInt();
+                    if (v == 1){
                         System.out.println("Enter user id : ");
                         library.searchUser(in.nextInt());
                     }
-                    else if(ch == 2){
+                    else if(v == 2){
                         System.out.println("Enter first name : ");
                         String f = in.next();
                         System.out.println("Enter last name : ");
@@ -140,7 +194,7 @@ public class Main {
                     System.out.println("How do you want to search?");
                     System.out.println("1 : book id");
                     System.out.println("2 : book genre");
-                    ch = in.nextInt();
+                    int ch = in.nextInt();
                     if (ch == 1){
                         System.out.println("Enter book id : ");
                         library.searchBook(in.nextInt());
